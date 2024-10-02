@@ -1,0 +1,1 @@
+Implimentation of Pascal triangle

@@ -37,24 +37,18 @@ try:
         line_count += 1
 
         try:
-            # Split the line based on spaces to extract parts
             parts = line.split()
 
-            # Extract file size (last part of the line)
             file_size = int(parts[-1])
 
-            # Extract status code (second-to-last part)
             status_code = parts[-2]
 
-            # Update total file size
             total_file_size += file_size
 
-            # Update count of the status code if it's valid
             if status_code in status_codes:
                 status_codes[status_code] += 1
 
         except (IndexError, ValueError):
-            # Ignore lines that do not match the expected format
             continue
 
         # Print the stats after every 10 lines
@@ -62,9 +56,8 @@ try:
             print_stats()
 
 except KeyboardInterrupt:
-    # Print the stats when interrupted by keyboard (CTRL + C)
+
     print_stats()
     raise
 
-# Print the final stats if the input ends without interruption
 print_stats()

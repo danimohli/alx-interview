@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """
 A script that reads stdin line by line, computes metrics, and outputs
 statistics every 10 lines or on keyboard interruption.

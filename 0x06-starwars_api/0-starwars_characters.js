@@ -1,43 +1,25 @@
 #!/usr/bin/node
+const request = require('request');
+const API_URL = 'https://swapi-api.hbtn.io/api';
 
-const fetch = require('node-fetch');
-
-// Get movie ID from the command line arguments
-const movieId = process.argv[2];
-
-if (!movieId) {
-  console.log("Usage: ./star_wars_characters.js <movie_id>");
-  process.exit(1);
-}
-
-// Base URL for the Star Wars API
-const filmUrl = `https://swapi-api.alx-tools.com/api/films/${movieId}/`;
-
-async function fetchCharacterNames() {
-  try {
-    // Fetch movie details
-    const filmResponse = await fetch(filmUrl);
-    
-    if (!filmResponse.ok) {
-      throw new Error(`Error fetching movie details: ${filmResponse.statusText}`);
+if (process.argv.length > 2) {
+  request(`${API_URL}/films/${process.argv[2]}/`, (err, _, body) => {
+    if (err) {
+      console.log(err);
     }
-    
-    const filmData = await filmResponse.json();
-    
-    // Fetch each character's name in sequence
-    for (const characterUrl of filmData.characters) {
-      const characterResponse = await fetch(characterUrl);
-      
-      if (!characterResponse.ok) {
-        throw new Error(`Error fetching character data: ${characterResponse.statusText}`);
-      }
-      
-      const characterData = await characterResponse.json();
-      console.log(characterData.name);
-    }
-  } catch (error) {
-    console.error(error.message);
-  }
-}
+    const charactersURL = JSON.parse(body).characters;
+    const charactersName = charactersURL.map(
+      url => new Promise((resolve, reject) => {
+        request(url, (promiseErr, __, charactersReqBody) => {
+          if (promiseErr) {
+            reject(promiseErr);
+          }
+          resolve(JSON.parse(charactersReqBody).name);
+        });
+      }));
 
-fetchCharacterNames();
+    Promise.all(charactersName)
+      .then(names => console.log(names.join('\n')))
+      .catch(allErr => console.log(allErr));
+  });
+}

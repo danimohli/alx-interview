@@ -1,4 +1,17 @@
+#!/usr/bin/python3
+"""
+The challenge involves determining the winner of a game based
+On the strategic removal of prime numbers and their multiples
+from a set of consecutive integers.
+"""
+
 def isWinner(x, nums):
+    """
+    They play x rounds of the game, where n may be different for each round.
+    Assuming Maria always goes first and both players play optimally,
+    determine who the winner of each game is.
+    """
+
     def sieve(n):
         primes = [True] * (n + 1)
         primes[0] = primes[1] = False
